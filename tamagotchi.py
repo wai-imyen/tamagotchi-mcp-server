@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 
 app = FastAPI()
-PET_FILE = "data/tamagotchi.json"
+PET_FILE = "./tamagotchi.json"
 
 def init_pet():
     if not os.path.exists(PET_FILE):

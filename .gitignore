@@ -1,4 +1,5 @@
 tamagotchi-mcp-env
-.data
+data
 .env
 __pycache__
+tamagotchi.json
