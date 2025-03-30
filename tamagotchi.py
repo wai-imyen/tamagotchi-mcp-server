@@ -10,7 +10,7 @@ PET_FILE = "./tamagotchi.json"
 def init_pet():
     if not os.path.exists(PET_FILE):
         default_pet = {
-            "name": "咕咕",
+            "name": "小雞",
             "stage": "egg",
             "hunger": 0,
             "happiness": 0,
@@ -25,6 +25,10 @@ def init_pet():
         }
         with open(PET_FILE, "w") as f:
             json.dump(default_pet, f)
+
+def remove_pet():
+    if os.path.exists(PET_FILE):
+        os.remove(PET_FILE)
 
 def load_pet():
     with open(PET_FILE, "r") as f:
@@ -151,12 +155,19 @@ def update_pet_status(action: dict):
     save_pet(pet)
     return pet
 
+@app.post("/reset")
+def reset():
+    remove_pet()
+    init_pet()
+    return {"message": "遊戲已重置"}
+
 @app.get("/mcp/discovery")
 def mcp_discovery():
     return {
         "name": "Virtual Pet Manager",
         "endpoints": {
             "status": {"method": "GET", "path": "/pet/status"},
-            "update": {"method": "POST", "path": "/pet/update"}
+            "update": {"method": "POST", "path": "/pet/update"},
+            "reset": {"method": "POST", "path": "/reset"}
         }
     }

@@ -6,6 +6,29 @@ FASTAPI_BASE_URL = "http://0.0.0.0:8000"
 mcp = FastMCP("tamagotchi-mcp-server")
 
 @mcp.tool()
+async def get_game_instructions() -> dict:
+    """取得遊戲說明"""
+    instructions = (
+        "【歡迎來到小雞養成遊戲！】\n"
+        "你將養育一隻可愛的小雞，從一顆蛋開始，陪伴它成長為成雞！\n\n"
+        "🎮 遊戲玩法：\n"
+        "1. **開始遊戲**：你的小雞預設名叫「小雞」，初始狀態為蛋\n"
+        "2. **自訂名字**：你可以幫小雞取個獨特的名字！\n"
+        "3. **孵化蛋**：蛋階段時，你可以搖晃蛋，約 5 分鐘後孵化。\n"
+        "4. **照顧小雞**：\n"
+        "   - 'feed'：餵食降低飢餓，提升快樂。\n"
+        "   - 'play'：玩耍提升快樂，但消耗能量。\n"
+        "   - 'rest'：休息恢復能量，可能降低快樂。\n"
+        "   - 'clean'：清理窩減少髒亂，提升健康。\n"
+        "   - 'heal'：治療恢復健康。\n"
+        "5. **時間影響**：太久沒照顧（12 小時以上），小雞會不開心，甚至可能飛走（24 小時且健康低）！\n\n"
+        "🏆 目標：\n"
+        "讓小雞健康快樂地成長到成雞階段，避免它因為疏忽而飛走。根據你的照顧，它可能會有不同的結局哦！\n"
+        "快開始吧，聽到蛋裡傳來啾啾聲了嗎？"
+    )
+    return {"message": instructions}
+
+@mcp.tool()
 async def get_pet_status() -> dict:
     """取得寵物狀態"""
     async with aiohttp.ClientSession() as session:
@@ -98,6 +121,18 @@ async def update_pet_status(action: str, value: int = 20) -> dict:
             else:
                 error_detail = await response.text()
                 raise ValueError(f"更新失敗: {error_detail}")
+
+@mcp.tool()
+async def reset() -> dict:
+    """
+    重置遊戲
+    """
+    async with aiohttp.ClientSession() as session:
+        async with session.post(f"{FASTAPI_BASE_URL}/reset") as response:
+            if response.status == 200:
+                return {"message": "遊戲已重置"}
+            else:
+                raise ValueError("無法重置遊戲")
 
 @mcp.resource("discovery://info")
 async def mcp_discovery() -> dict:
