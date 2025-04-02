@@ -58,3 +58,7 @@ uvicorn tamagotchi:app --host 0.0.0.0 --port 8000
 - 「幫小雞洗澡」
 - 「帶小雞看醫生」
 - 「清理小雞的窩」
+- 「重置遊戲」
+
+## Implementation
+[🔗 實作 MCP Server：以「電子雞養成遊戲」為例](https://wai-imyen.github.io/posts/tamagotchi-mcp-server/)
